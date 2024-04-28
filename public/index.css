@@ -1,0 +1,128 @@
+* {
+    box-sizing: border-box;
+}
+
+body, html {
+    margin: 0;
+    padding: 0;
+    overflow: auto;
+}
+
+#header {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    background-color: #222831;
+    position: fixed;
+    width: 100%;
+}
+
+.icon {
+    font-size: 25px;
+    margin-right: 20px;
+    cursor: pointer;
+    color: #76ABAE;
+}
+
+.icon:hover {
+    color: #587e80;
+}
+
+.menu-icon {
+    font-size: 25px;
+    margin-right: 20px;
+    cursor: pointer;
+    color: #EEEEEE;
+}
+
+canvas {
+    width: 100%;
+    height: 100%;
+    cursor: crosshair;
+    background-color: white;
+    overflow: auto;
+}
+
+.fa-pencil {
+    position: relative;
+}
+
+.brush-tools {
+    position: absolute;
+    top: 35px;
+    display: flex;
+    width: 150px;
+    flex-direction: column;
+    background-color: #222831;
+    padding: 0 5px;
+    display: none;
+    color: white;
+}
+
+.size {
+    width: 90px;
+}
+
+.brush-tools input {
+     display: inline;
+}
+
+.brush-tools label {
+    display: inline;
+    font-size: 14px;
+}
+
+input[type=color]{
+	width: 60px;
+	height: 35px;
+	border: none;
+	background: none;
+}
+input[type="color"]::-webkit-color-swatch-wrapper {
+	padding: 0;
+}
+input[type="color"]::-webkit-color-swatch {
+	border: none;
+}
+
+.toolbox-span {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* write css for sticky note */
+.sticky-note {
+    position: absolute;
+    top: 15rem;
+    left: 10rem;
+}
+
+.note-header {
+    width: 172px;
+    background-color: #d8d8d8;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: right;
+    cursor: move;
+}
+
+.note-header i {
+    padding-left: 5px;
+    cursor: pointer;
+}
+
+.note-body {
+    width: 172px;
+    height: 190px;
+    border-top: none;
+}
+
+textarea {
+    resize: none;
+}
+
+textarea:focus {
+    outline: none;
+}
