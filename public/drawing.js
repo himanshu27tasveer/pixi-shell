@@ -31,24 +31,19 @@ saveState();
 
 canvas.addEventListener("mousedown", (e) => {
   isDrawing = true;
-  ctx.beginPath();
-  ctx.moveTo(e.clientX, e.clientY);
+  socket.emit("startDrawing", {
+    x: e.clientX,
+    y: e.clientY,
+  });
 });
 
 canvas.addEventListener("mousemove", (e) => {
   if (isDrawing) {
-    ctx.lineTo(
-      e.clientX - canvas.getBoundingClientRect().left,
-      e.clientY - canvas.getBoundingClientRect().top
-    );
-    if (isErasing) {
-      ctx.lineWidth = eraserSize.value;
-      ctx.strokeStyle = "white";
-    } else {
-      ctx.lineWidth = size;
-      ctx.strokeStyle = color;
-    }
-    ctx.stroke();
+    socket.emit("drawStroke", {
+      coordinates: { x: e.clientX, y: e.clientY },
+      color: isErasing ? "white" : color,
+      size: isErasing ? eraserSize.value : size,
+    });
   }
 });
 
@@ -59,6 +54,10 @@ canvas.addEventListener("mouseup", () => {
     state = state.slice(0, pointer + 1);
   }
   saveState();
+  socket.emit("updateState", {
+    state: state,
+    pointer: pointer,
+  });
 });
 
 canvas.addEventListener("mouseleave", () => {
@@ -77,23 +76,73 @@ brushColor.addEventListener("change", (e) => {
 undoBtn.addEventListener("click", () => {
   if (pointer > 0) {
     pointer--;
-    const url = state[pointer];
-    const img = new Image();
-    img.src = url;
-    img.onload = () => {
-      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-    };
   }
+  socket.emit("undoRedo", {
+    canvasState: state[pointer],
+    width: canvas.width,
+    height: canvas.height,
+  });
+  socket.emit("updateState", {
+    state: state,
+    pointer: pointer,
+  });
 });
 
 redoBtn.addEventListener("click", () => {
   if (pointer < state.length - 1) {
     pointer++;
-    const url = state[pointer];
-    const img = new Image();
-    img.src = url;
-    img.onload = () => {
-      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-    };
   }
+  socket.emit("undoRedo", {
+    canvasState: state[pointer],
+    width: canvas.width,
+    height: canvas.height,
+  });
+  socket.emit("updateState", {
+    state: state,
+    pointer: pointer,
+  });
+});
+
+function startDrawing(coordinates) {
+  ctx.beginPath();
+  ctx.moveTo(coordinates.x, coordinates.y);
+}
+
+function drawStroke({ coordinates, color, size }) {
+  ctx.lineTo(coordinates.x, coordinates.y);
+  ctx.lineWidth = size;
+  ctx.strokeStyle = color;
+  ctx.stroke();
+}
+
+function undoRedo(data) {
+  const url = data.canvasState;
+  const img = new Image();
+  img.src = url;
+  img.onload = () => {
+    ctx.drawImage(img, 0, 0, data.width, data.height);
+  };
+}
+
+function updateState(data) {
+  state = data.state;
+  pointer = data.pointer;
+}
+
+// sockets func
+
+socket.on("startDrawing", (data) => {
+  startDrawing(data);
+});
+
+socket.on("drawStroke", (data) => {
+  drawStroke(data);
+});
+
+socket.on("updateState", (data) => {
+  updateState(data);
+});
+
+socket.on("undoRedo", (data) => {
+  undoRedo(data);
 });
