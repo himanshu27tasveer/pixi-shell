@@ -10,8 +10,6 @@ const redoBtn = document.querySelector("#redo");
 let color = brushColor.value;
 let size = brushSize.value;
 let isDrawing = false;
-let state = [];
-let pointer = -1;
 
 // Function to save the current canvas state
 function saveState() {
@@ -34,12 +32,14 @@ canvas.addEventListener("mousedown", (e) => {
   socket.emit("startDrawing", {
     x: e.clientX,
     y: e.clientY,
+    roomId: roomId,
   });
 });
 
 canvas.addEventListener("mousemove", (e) => {
   if (isDrawing) {
     socket.emit("drawStroke", {
+      roomId: roomId,
       coordinates: { x: e.clientX, y: e.clientY },
       color: isErasing ? "white" : color,
       size: isErasing ? eraserSize.value : size,
@@ -55,8 +55,9 @@ canvas.addEventListener("mouseup", () => {
   }
   saveState();
   socket.emit("updateState", {
-    state: state,
-    pointer: pointer,
+    roomId: roomId,
+    canvasState: state,
+    canvasPointer: pointer,
   });
 });
 
@@ -78,13 +79,15 @@ undoBtn.addEventListener("click", () => {
     pointer--;
   }
   socket.emit("undoRedo", {
+    roomId: roomId,
     canvasState: state[pointer],
     width: canvas.width,
     height: canvas.height,
   });
   socket.emit("updateState", {
-    state: state,
-    pointer: pointer,
+    roomId: roomId,
+    canvasState: state,
+    canvasPointer: pointer,
   });
 });
 
@@ -93,13 +96,15 @@ redoBtn.addEventListener("click", () => {
     pointer++;
   }
   socket.emit("undoRedo", {
+    roomId: roomId,
     canvasState: state[pointer],
     width: canvas.width,
     height: canvas.height,
   });
   socket.emit("updateState", {
-    state: state,
-    pointer: pointer,
+    roomId: roomId,
+    canvasState: state,
+    canvasPointer: pointer,
   });
 });
 
@@ -125,8 +130,8 @@ function undoRedo(data) {
 }
 
 function updateState(data) {
-  state = data.state;
-  pointer = data.pointer;
+  state = data.canvasState;
+  pointer = data.canvasPointer;
 }
 
 // sockets func

@@ -8,6 +8,20 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
+    <div id="transparent-bg">
+        <div id="modal">
+            <!-- <span style="position: absolute; top: 10px; right: 10px; cursor: pointer;"><i class="fa-solid fa-xmark"></i></span> -->
+            <h3 style="text-align: center;">SyncUp</h3>
+            <div>
+                <button id="create-room-btn">Create Room</button>
+            </div>
+            <p>Or</p>
+            <div>
+                <input type="text" id="room-id-input-modal" placeholder="Enter Room ID" />
+                <button id="join-room-modal">Join Room</button>
+            </div>
+        </div>
+    </div>
     <div id="header">
         <div><i id="menu-bar" class="menu-icon fa-solid fa-bars"></i></div>
         <div>
@@ -20,7 +34,8 @@
             <i class="icon fa-solid fa-rotate-right" id="redo"></i>
         </div>
         <div>
-            <button id="create-room">Create Room</button>
+            <span style="color: white; font-weight: 100; font-size: 12px" id="room-id"></span>
+            <input type="text" id="new-room-id" placeholder="Enter Room ID" />
             <button id="join-room">Join Room</button>
         </div>
     </div>
@@ -40,19 +55,14 @@
             <input type="range" value="3" min="3" max="20" name="size" id="eraser-size" class="size" />
         </span>
     </span>
-    <!-- <br /><br /><br /><br /><br /><br />
-    <div class="sticky-note">
-        <div class="note-header">
-            <i class="fa-solid fa-circle-xmark" style="color: red;"></i>
-            <i class="fa-regular fa-window-maximize" style="color: green;"></i>
-        </div>
-        <textarea class="note-body"></textarea>
-    </div> -->
     <canvas id="canvas"></canvas>
     <script src="https://cdn.socket.io/4.2.0/socket.io.min.js" integrity="sha384-PiBR5S00EtOj2Lto9Uu81cmoyZqR57XcOna1oAuVuIEjzj0wpqDVfD0JA9eXlRsj" crossorigin="anonymous"></script>
     <script>
         let socket = io.connect("http://localhost:5000");
+        let state = [];
+        let pointer = -1;
     </script>
+    <script src="room.js"></script>
     <script src="drawing.js"></script>
     <script src="toolbar.js"></script>
 </body>
