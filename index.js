@@ -4,6 +4,10 @@ const { addUser } = require("./users.js");
 
 const app = express();
 
+const bodyParser = require("body-parser");
+app.use(bodyParser.json({ limit: "50mb" }));
+app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
+
 function generateUniqueId() {
   const dateString = Date.now().toString(36);
   const randomness = Math.random().toString(36).substr(2);
@@ -20,12 +24,18 @@ let globalState = {};
 
 app.use(express.static("public"));
 
+app.get("/healthz", (req, res) => {
+  res.status(200).send("Ok");
+});
+
 let port = process.env.PORT || 5000;
 let server = app.listen(port, () => {
   console.log("Listening to port" + port);
 });
 
-let io = socket(server);
+let io = socket(server, {
+  maxHttpBufferSize: 50 * 1024 * 1024, // 50MB limit
+});
 
 io.on("connection", (socket) => {
   console.log("Made socket connection");

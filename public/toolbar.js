@@ -1,5 +1,4 @@
 let isErasing = false;
-const menuBtn = document.querySelector("#menu-bar");
 const brushToolBox = document.querySelector("#brush-toolbox");
 const eraserToolBox = document.querySelector("#eraser-toolbox");
 const pencilBtn = document.querySelector(".fa-pencil");
@@ -10,17 +9,6 @@ const uploadBtn = document.querySelector(".fa-upload");
 
 brushToolBox.style.left = pencilBtn.offsetLeft + "px";
 eraserToolBox.style.left = eraserBtn.offsetLeft + "px";
-
-menuBtn.addEventListener("click", function () {
-  const classes = menuBtn.classList;
-  if (classes.contains("fa-bars")) {
-    classes.remove("fa-bars");
-    classes.add("fa-xmark");
-  } else {
-    classes.add("fa-bars");
-    classes.remove("fa-xmark");
-  }
-});
 
 pencilBtn.addEventListener("click", () => {
   if (

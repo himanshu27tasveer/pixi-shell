@@ -1,5 +1,3 @@
-const canvas = document.querySelector("canvas");
-const ctx = canvas.getContext("2d", { willReadFrequently: true });
 const brushSize = document.querySelector("#brush-size");
 const brushColor = document.querySelector("#brush-color");
 const eraserSize = document.querySelector("#eraser-size");

@@ -17,13 +17,13 @@
             </div>
             <p>Or</p>
             <div>
-                <input type="text" id="room-id-input-modal" placeholder="Enter Room ID" />
+                <input type="text" value="" id="room-id-input-modal" placeholder="Enter Room ID" />
                 <button id="join-room-modal">Join Room</button>
             </div>
         </div>
     </div>
     <div id="header">
-        <div><i id="menu-bar" class="menu-icon fa-solid fa-bars"></i></div>
+        <span style="color: white; font-weight: 300; font-size: 18px; border: 2px solid #76ABAE; padding: 2px;">SyncUp</span>
         <div>
             <i class="icon fa-solid fa-pencil"></i>
             <i class="icon fa-solid fa-eraser"></i>
@@ -34,9 +34,9 @@
             <i class="icon fa-solid fa-rotate-right" id="redo"></i>
         </div>
         <div>
-            <span style="color: white; font-weight: 100; font-size: 12px" id="room-id"></span>
-            <input type="text" id="new-room-id" placeholder="Enter Room ID" />
-            <button id="join-room">Join Room</button>
+            <button style="color: white; font-weight: 100; font-size: 15px; letter-spacing: 1px;" id="room-id"></button>
+            <input type="text" id="new-room-id" value="" placeholder="Enter Room ID" />
+            <button id="join-room-main">Join Room</button>
         </div>
     </div>
     <span class="brush-tools" id="brush-toolbox">
@@ -58,9 +58,11 @@
     <canvas id="canvas"></canvas>
     <script src="https://cdn.socket.io/4.2.0/socket.io.min.js" integrity="sha384-PiBR5S00EtOj2Lto9Uu81cmoyZqR57XcOna1oAuVuIEjzj0wpqDVfD0JA9eXlRsj" crossorigin="anonymous"></script>
     <script>
-        let socket = io.connect("http://localhost:5000");
+        let socket = io.connect(location.origin);
         let state = [];
         let pointer = -1;
+        const canvas = document.querySelector("canvas");
+        const ctx = canvas.getContext("2d", { willReadFrequently: true });
     </script>
     <script src="room.js"></script>
     <script src="drawing.js"></script>
