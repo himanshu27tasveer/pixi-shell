@@ -27,6 +27,7 @@ saveState();
 
 canvas.addEventListener("mousedown", (e) => {
   isDrawing = true;
+  startDrawing({ x: e.clientX, y: e.clientY, roomId: roomId });
   socket.emit("startDrawing", {
     x: e.clientX,
     y: e.clientY,
@@ -36,6 +37,12 @@ canvas.addEventListener("mousedown", (e) => {
 
 canvas.addEventListener("mousemove", (e) => {
   if (isDrawing) {
+    drawStroke({
+      roomId: roomId,
+      coordinates: { x: e.clientX, y: e.clientY },
+      color: isErasing ? "white" : color,
+      size: isErasing ? eraserSize.value : size,
+    });
     socket.emit("drawStroke", {
       roomId: roomId,
       coordinates: { x: e.clientX, y: e.clientY },
@@ -52,6 +59,7 @@ canvas.addEventListener("mouseup", () => {
     state = state.slice(0, pointer + 1);
   }
   saveState();
+  updateState({ canvasState: state, canvasPointer: pointer, roomId: roomId });
   socket.emit("updateState", {
     roomId: roomId,
     canvasState: state,
@@ -76,6 +84,17 @@ undoBtn.addEventListener("click", () => {
   if (pointer > 0) {
     pointer--;
   }
+  undoRedo({
+    roomId: roomId,
+    canvasState: state[pointer],
+    width: canvas.width,
+    height: canvas.height,
+  });
+  updateState({
+    roomId: roomId,
+    canvasState: state,
+    canvasPointer: pointer,
+  });
   socket.emit("undoRedo", {
     roomId: roomId,
     canvasState: state[pointer],
@@ -93,6 +112,17 @@ redoBtn.addEventListener("click", () => {
   if (pointer < state.length - 1) {
     pointer++;
   }
+  undoRedo({
+    roomId: roomId,
+    canvasState: state[pointer],
+    width: canvas.width,
+    height: canvas.height,
+  });
+  updateState({
+    roomId: roomId,
+    canvasState: state,
+    canvasPointer: pointer,
+  });
   socket.emit("undoRedo", {
     roomId: roomId,
     canvasState: state[pointer],

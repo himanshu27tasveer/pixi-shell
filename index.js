@@ -57,20 +57,20 @@ io.on("connection", (socket) => {
   });
 
   socket.on("startDrawing", (data) => {
-    io.in(data.roomId).emit("startDrawing", data);
+    socket.to(data.roomId).emit("startDrawing", data);
   });
 
   socket.on("drawStroke", (data) => {
-    io.in(data.roomId).emit("drawStroke", data);
+    socket.to(data.roomId).emit("drawStroke", data);
   });
 
   socket.on("undoRedo", (data) => {
-    io.in(data.roomId).emit("undoRedo", data);
+    socket.to(data.roomId).emit("undoRedo", data);
   });
 
   socket.on("updateState", (data) => {
     globalState[data.roomId].canvasState = data.canvasState;
     globalState[data.roomId].canvasPointer = data.canvasPointer;
-    io.in(data.roomId).emit("updateState", data);
+    socket.to(data.roomId).emit("updateState", data);
   });
 });
